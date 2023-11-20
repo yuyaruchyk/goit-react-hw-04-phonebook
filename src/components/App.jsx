@@ -5,17 +5,21 @@ import { ContactList } from './ContactList/ContactList';
 import { nanoid } from 'nanoid';
 import { Container } from './App.styled';
 
+
+const storageKey = 'contacts';
+const savedContacts = window.localStorage.getItem(storageKey);
+
+
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => JSON.parse(savedContacts) ?? []);
   const [filters, setFilters] = useState('');
 
-  useEffect(() => {
-    const storedContacts = JSON.parse(localStorage.getItem('contacts'));
+  
 
-    if (storedContacts && storedContacts.length > 0) {
-      setContacts(storedContacts);
-    }
-  }, []);
+  useEffect(() => {
+      window.localStorage.setItem(storageKey, JSON.stringify(contacts));
+  }, [contacts]);
+
 
   const updateFilter = newTopic => {
     setFilters(newTopic);
